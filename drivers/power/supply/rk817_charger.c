@@ -674,7 +674,7 @@ static enum power_supply_property rk817_chg_props[] = {
 };
 
 static const struct power_supply_desc rk817_bat_desc = {
-	.name = "rk817-battery",
+	.name = "battery",
 	.type = POWER_SUPPLY_TYPE_BATTERY,
 	.properties = rk817_bat_props,
 	.num_properties = ARRAY_SIZE(rk817_bat_props),
