@@ -563,9 +563,10 @@ static int generic_panel_probe(struct mipi_dsi_device *dsi)
     struct generic_panel *ctx;
     int ret;
 
-    ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-    if (!ctx)
-        return -ENOMEM;
+    ctx = devm_drm_panel_alloc(dev, struct generic_panel, panel,
+                               &generic_panel_funcs, DRM_MODE_CONNECTOR_DSI);
+    if (IS_ERR(ctx))
+        return PTR_ERR(ctx);
 
     ctx->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
     if (IS_ERR(ctx->reset_gpio)) {
@@ -616,9 +617,6 @@ static int generic_panel_probe(struct mipi_dsi_device *dsi)
 
     dev_info(dev, "lanes %d, format %d, mode %lx\n", dsi->lanes, dsi->format, dsi->mode_flags);
 
-    drm_panel_init(&ctx->panel, &dsi->dev, &generic_panel_funcs,
-               DRM_MODE_CONNECTOR_DSI);
-
     ret = drm_panel_of_backlight(&ctx->panel);
     if (ret)
         return ret;
@@ -638,15 +636,9 @@ static int generic_panel_probe(struct mipi_dsi_device *dsi)
 static void generic_panel_shutdown(struct mipi_dsi_device *dsi)
 {
     struct generic_panel *ctx = mipi_dsi_get_drvdata(dsi);
-    int ret;
 
-    ret = drm_panel_unprepare(&ctx->panel);
-    if (ret < 0)
-        dev_err(&dsi->dev, "Failed to unprepare panel: %d\n", ret);
-
-    ret = drm_panel_disable(&ctx->panel);
-    if (ret < 0)
-        dev_err(&dsi->dev, "Failed to disable panel: %d\n", ret);
+    drm_panel_disable(&ctx->panel);
+    drm_panel_unprepare(&ctx->panel);
 }
 
 static void generic_panel_remove(struct mipi_dsi_device *dsi)

@@ -198,7 +198,7 @@ static int rockchip_bus_clkfreq(struct rockchip_bus *bus)
 	}
 
 	init_rate = clk_get_rate(bus->clk);
-	printk("init rate %d", init_rate);
+	printk("init rate %lu", init_rate);
 	ret = rockchip_bus_clkfreq_target(dev, init_rate);
 	if (ret)
 		return ret;

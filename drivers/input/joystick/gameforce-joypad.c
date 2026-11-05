@@ -897,7 +897,8 @@ static int joypad_vib_setup(struct device *dev, struct joypad *joypad)
 			return -1;
 
         printk("%s get vibrator0-gpio = %d \n", __func__, joypad->vib->gpio0);
-		ret = devm_gpio_request(dev, joypad->vib->gpio0, "vibrator0");
+		ret = devm_gpio_request_one(dev, joypad->vib->gpio0,
+					    GPIOF_OUT_INIT_LOW, "vibrator0");
 		if (ret < 0)
 			return ret;
 
@@ -906,7 +907,8 @@ static int joypad_vib_setup(struct device *dev, struct joypad *joypad)
 			return -1;
 
         printk("%s get vibrator1-gpio = %d \n", __func__, joypad->vib->gpio1);
-		ret = devm_gpio_request(dev, joypad->vib->gpio1, "vibrator1");
+		ret = devm_gpio_request_one(dev, joypad->vib->gpio1,
+					    GPIOF_OUT_INIT_LOW, "vibrator1");
 		if (ret < 0)
 			return ret;
 
@@ -1231,7 +1233,6 @@ static const struct file_operations joypad_fops = {
 	.release	= joypad_misc_release,
 	.write		= joypad_misc_write,
 	.unlocked_ioctl	= joypad_misc_ioctl,
-	.llseek		= no_llseek,
 
 };
 

@@ -32,7 +32,7 @@ struct adc_keys_state {
 struct input_dev * joypad_input_g;
 EXPORT_SYMBOL(joypad_input_g);
 
-void rk_send_key_f_key_up(void)
+static void rk_send_key_f_key_up(void)
 {
 	if (!joypad_input_g)
 		return;
@@ -41,7 +41,7 @@ void rk_send_key_f_key_up(void)
 	input_sync(joypad_input_g);
 }
 
-void rk_send_key_f_key_down(void)
+static void rk_send_key_f_key_down(void)
 {
 	if (!joypad_input_g)
 		return;
